@@ -33,10 +33,17 @@ const [transactions, setTransactions] = useState<Transaction[]>([])
       .then(response => setTransactions(response.data.transactions))
   }, [])
 
-async function createTransaction (transaction: TransactionInput) {
-    await api.post('/transactions', transaction)
+async function createTransaction (transactionInput: TransactionInput) {
+    const response = await api.post('/transactions', {
+      ...transactionInput, 
+      createdAt: new Date()
+    })
+    const { transaction }  = response.data
 
-    console.log('dados', transaction)
+    setTransactions([
+      ...transactions,
+      transaction
+      ])
 }
 
 
