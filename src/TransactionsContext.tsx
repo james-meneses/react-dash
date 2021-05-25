@@ -16,13 +16,13 @@ interface TransactionProviderProps {
 
 interface TransactionContextData { 
   transactions: Transaction[];
-  createTransaction: (transaction: TransactionInput) => void;
+  createTransaction: (transaction: TransactionInput) => Promise<void>;
 }
 
 type TransactionInput = Omit<Transaction, 'id' | 'createdAt'>;
 
 // type TransactionInput = Pick<Transaction, 'title' | 'amount' | 'type' | 'category'>;
-
+ 
 export const TransactionsContext = createContext<TransactionContextData>({} as TransactionContextData)
 
 export function TransactionsProvider ({children}: TransactionProviderProps) {
@@ -33,8 +33,8 @@ const [transactions, setTransactions] = useState<Transaction[]>([])
       .then(response => setTransactions(response.data.transactions))
   }, [])
 
-function createTransaction (transaction: TransactionInput) {
-    api.post('/transactions', transaction)
+async function createTransaction (transaction: TransactionInput) {
+    await api.post('/transactions', transaction)
 
     console.log('dados', transaction)
 }
